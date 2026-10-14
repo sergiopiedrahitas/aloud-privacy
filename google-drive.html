@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aloud — How Aloud uses Google Drive</title>
+<meta name="description" content="What Aloud asks for when you connect Google Drive, why it needs read-only access to your audiobook folders, what it never does, and how to disconnect.">
+<style>
+  :root { color-scheme: light dark; --accent: #7c5cff; }
+  body { font-family: system-ui, -apple-system, sans-serif; max-width: 46rem;
+         margin: 0 auto; padding: 2rem 1.25rem 4rem; line-height: 1.65; }
+  h1 { font-size: 1.9rem; margin-bottom: .25rem; }
+  h2 { font-size: 1.25rem; margin-top: 2.2rem; }
+  .updated { opacity: .7; font-size: .9rem; }
+  a { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .95rem; }
+  th, td { text-align: left; vertical-align: top; padding: .5rem .6rem; border-bottom: 1px solid rgba(127,127,127,.35); }
+  th { font-weight: 600; }
+  .flow { border-left: 4px solid var(--accent); padding: .75rem 1rem; margin: 1.5rem 0;
+          background: rgba(124, 92, 255, .07); border-radius: 0 8px 8px 0; }
+  code { font-size: .92em; }
+  footer { margin-top: 3rem; opacity: .75; font-size: .9rem; }
+</style>
+</head>
+<body>
+<h1>How Aloud uses Google Drive</h1>
+<p class="updated">Last updated: 2026-10-13</p>
+
+<p>Many people keep their audiobook collection in Google Drive: one folder per book, each holding the
+book's audio files, often grouped under author or language folders. Aloud lets you play that collection
+without downloading it to your phone first. This page explains exactly what Aloud asks for, why, and what
+it never does. The <a href="privacy.html">Privacy Policy</a> is the binding statement of our data
+practices; this page is the plain-language walkthrough.</p>
+
+<h2>What you are asked to grant</h2>
+<table>
+  <tr><th>Permission shown by Google</th><th>What Aloud does with it</th></tr>
+  <tr>
+    <td>"See and download all your Google Drive files" (the read-only Drive permission,
+        <code>drive.readonly</code>)</td>
+    <td>Lists the folders <em>you</em> pick inside Aloud (and any folder you open yourself on the Browse
+        screen), finds the audiobooks in them, streams their audio for playback, downloads it when you ask for
+        an offline copy or read-along, reads the title, album, author and ISBN/ASIN tags of each book's first
+        file, and reads read-along transcript
+        files you placed there. Nothing else. Aloud never uses this permission to scan folders you did not pick
+        or open.</td>
+  </tr>
+  <tr>
+    <td>Your basic account info (name, email address, profile picture)</td>
+    <td>Shows which account is connected on the Sources screen so you can tell accounts apart and disconnect
+        the right one.</td>
+  </tr>
+</table>
+
+<h2>Why read-only access to Drive, and not a file picker</h2>
+<p>Google offers a narrower permission that only covers individual files a user picks in a Google file
+picker. Aloud's library model does not fit it: an audiobook is a <em>folder</em> of many files, a
+collection is hundreds or thousands of such folders nested under author or language folders, and new books
+are added over time. Google states that picking a folder with the narrower permission does not give an app
+access to the items inside it, and in our testing the audio files inside each book folder stayed invisible
+and books added later were not covered. Picking every book folder (and every new one) by hand is not a
+usable audiobook player. Read-only Drive access is the smallest permission that lets Aloud list a folder
+tree you chose and play the audio inside it. Aloud never asks for write access.</p>
+
+<h2>What Aloud reads, step by step</h2>
+<ol>
+  <li><strong>You choose folders.</strong> After connecting, Aloud shows a folder browser with your My Drive
+      and the folders shared with you. You select the folder(s) that hold your audiobooks (for example
+      <code>Audiobooks</code>). Aloud remembers the folders you selected and a listing of the books in
+      them.</li>
+  <li><strong>Aloud lists those folders.</strong> It asks Drive for the names, types and sizes of the items
+      inside your selected folders and their subfolders, and for the checksum Drive keeps for each audio
+      file, and groups audio files into books. Aloud compares the checksums on your device to recognize the
+      same recording in two places.</li>
+  <li><strong>Aloud plays the audio.</strong> When you press play, audio streams directly from Google's
+      servers to your device. Aloud also reads small parts of the files: to measure each file's length, and,
+      to look up covers and ratings, the title, album, author and ISBN/ASIN tags in a book's first file (a few
+      requests of at most 4 MB each, never the whole file). Nothing passes through
+      any server of ours; there are none.</li>
+  <li><strong>Read-along and offline copies.</strong> If a read-along transcript file that you created sits
+      next to an audio file (<code>&lt;audio name&gt;.readalong.json</code>), Aloud reads it to show
+      synchronized text. If you prepare read-along without one, Aloud copies the audio temporarily to your
+      device so the speech recognition on your device can transcribe it. If you make a book available offline,
+      Aloud stores a copy on your device only.</li>
+</ol>
+
+<div class="flow">
+  <strong>Data flow in one line:</strong> Google Drive → your device (Aloud) → your ears. No Aloud servers,
+  no copies anywhere but your device and your own device backup, no advertising, no analytics.
+</div>
+
+<h2>What Aloud never does with your Drive</h2>
+<ul>
+  <li>Never creates, edits, moves, shares, or deletes anything in your Drive (it does not have write
+      permission, and it never asks for it).</li>
+  <li>Never uploads your files or your listening data to us or to anyone else. If Android's own device
+      backup is on, Android copies Aloud's database (not your audio) into your Google Account's backup; see
+      the <a href="privacy.html#backup">Privacy Policy</a>.</li>
+  <li>Never lets a person at Aloud see your files. There is no channel through which they could.</li>
+  <li>Never sells your data, uses it for advertising, or uses it to train AI models.</li>
+</ul>
+
+<h2>The one thing that leaves your device</h2>
+<p>To show covers, ratings and reviews, Aloud looks up each book's <em>title and author</em> (taken from
+your file names or embedded tags), or its ISBN or Audible ASIN when one is known, in public book catalogs:
+Apple iTunes Search, Open Library, Google Books, Hardcover, Audnexus, The New York Times Books API and
+LibraryThing, plus the Audible catalog if you turn on the extended search. Those requests carry only that
+book information, like typing a book title into a search box. They include no audio, no file paths, no
+Drive identifiers, no account identity and no device identifiers. The full list, with when each lookup
+happens, is in the <a href="privacy.html#lookups">Privacy Policy</a>. You can turn these lookups off at
+any time in Settings → Enrichment → Online covers &amp; ratings.</p>
+
+<h2>Disconnecting and revoking</h2>
+<ul>
+  <li><strong>In Aloud:</strong> Sources → your Google account → Disconnect. Aloud asks Google to revoke its
+      access, removes the account's credentials from your device, forgets the folders you selected and removes
+      the account's books from your library, except books you have started or saved, which stay listed but
+      cannot play until you reconnect. On Android, Google's sign-in library can revoke only an account Aloud
+      has used since the app was last started; if you disconnect right after opening Aloud, also remove access
+      from Google as described next.</li>
+  <li><strong>From Google:</strong> open your Google Account's
+      <a href="https://myaccount.google.com/linkedapps">linked apps page</a>, choose Aloud and select Remove
+      access. This works even if you no longer have the app.</li>
+  <li><strong>Everything else Aloud kept</strong> (library index, positions, listening history, bookmarks,
+      covers, read-along text, offline copies) is on your device. Settings has Clear listening history and
+      Clear read-along data; clearing the app's storage or uninstalling removes all of it from the device (on
+      Windows, also delete <code>aloud.sqlite</code> and <code>voice_notes</code> from your Documents
+      folder).</li>
+</ul>
+
+<h2>Google API Services User Data Policy</h2>
+<p>Aloud's use and transfer to any other app of information received from Google APIs will adhere to the
+<a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data
+Policy</a>, including the Limited Use requirements.</p>
+
+<h2>Questions</h2>
+<p>Write to <a href="mailto:dev-team@aloud-app.com">dev-team@aloud-app.com</a>.</p>
+
+<footer>
+  <a href="index.html">Home</a> · <a href="privacy.html">Privacy Policy</a> ·
+  <a href="terms.html">Terms of Service</a>
+</footer>
+</body>
+</html>
